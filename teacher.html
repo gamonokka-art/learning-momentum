@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>講師用｜個別配信リンク管理 | Learning Momentum</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;color:#1b2940;background:#f2f5f9}
+*{box-sizing:border-box}body{margin:0}
+header{background:#112b48;color:#fff;padding:28px max(18px,calc((100vw - 820px)/2))}
+header .eyebrow{color:#c6d9ed;font-size:13px;font-weight:800;letter-spacing:.1em}
+header h1{font-size:clamp(24px,4vw,32px);margin:12px 0 8px}
+header p{color:#dce7f2;line-height:1.7;margin:0}
+main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+.card{background:#fff;border:1px solid #dce4ee;border-radius:14px;padding:24px;margin-bottom:18px;box-shadow:0 3px 14px #112b4810}
+h2{font-size:19px;margin:0 0 15px}p{line-height:1.7}
+label{display:block;font-weight:750;margin-bottom:7px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+select{width:100%;font:inherit;padding:12px;border:1px solid #aebfd0;border-radius:9px;background:#fff;color:#1b2940}
+.url{margin:20px 0 14px;padding:13px 15px;background:#f0f5fa;border:1px solid #dce4ee;border-radius:9px;overflow-wrap:anywhere;font-size:14px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+button,.button-link{font:inherit;font-weight:750;border:0;border-radius:9px;padding:12px 16px;cursor:pointer;background:#12669b;color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+button:hover,.button-link:hover{background:#0d4d78}
+.secondary{background:#e0e8f1;color:#193b58}.secondary:hover{background:#cbdbe9}
+.status{min-height:1.6em;color:#126346;font-size:14px;font-weight:700;margin:12px 0 0}
+.set-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.set-grid button{padding:11px 7px;background:#f0f5fa;color:#214767;border:1px solid #d1dfea}
+.set-grid button[aria-pressed="true"]{background:#12669b;color:#fff;border-color:#12669b}
+.set-grid button:hover{background:#dceaf5;color:#12344f}
+.set-grid button[aria-pressed="true"]:hover{background:#0d4d78;color:#fff}
+.note{color:#52667b;font-size:13px;margin:14px 0 0}
+.warning{background:#fffaf0;border:1px solid #e7d5ae;border-radius:10px;padding:14px 16px;color:#5e4c2e;font-size:14px;line-height:1.7}
+footer{text-align:center;color:#607188;font-size:13px;padding:0 16px 28px}
+@media(max-width:550px){.card{padding:17px}.fields{grid-template-columns:1fr}.set-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.actions>*{flex:1 1 100%}header{padding:25px 18px}}
+</style>
+</head>
+<body>
+<header>
+<div class="eyebrow">LEARNING MOMENTUM · EPC TOKYO</div>
+<h1>講師用｜個別配信リンク管理</h1>
+<p>コースとセットを選び、問題URLまたは生徒向け案内文をコピーできます。</p>
+</header>
+<main>
+<section class="card" aria-labelledby="selection-title">
+<h2 id="selection-title">配信する問題を選択</h2>
+<div class="fields">
+<div><label for="course">コース</label><select id="course"><option value="standard">Business English Standard（500〜700点）</option><option value="advanced">Business English Advanced（700〜900点）</option></select></div>
+<div><label for="set">問題セット</label><select id="set"></select></div>
+</div>
+<div class="url" id="url" aria-live="polite"></div>
+<div class="actions">
+<button id="copy-url" type="button">URLをコピー</button>
+<button id="copy-message" type="button" class="secondary">案内文をコピー</button>
+<a id="preview" class="button-link secondary" href="#" target="_blank" rel="noopener noreferrer">問題を確認 ↗</a>
+</div>
+<p id="status" class="status" role="status" aria-live="polite"></p>
+</section>
+<section class="card" aria-labelledby="quick-title">
+<h2 id="quick-title">セットをすばやく選択</h2>
+<div id="set-grid" class="set-grid" aria-label="セット一覧"></div>
+<p class="note">各セット5問。選択後、上の「URLをコピー」または「案内文をコピー」を押してください。</p>
+</section>
+<div class="warning"><strong>運用上の注意：</strong>このページにはログイン認証はありません。URLを知っている人は閲覧できます。生徒名・成績などの個人情報は保存しません。個別配信版にもアクセス制限はありません。</div>
+</main>
+<footer>Developed by EPC TOKYO</footer>
+<script>
+(function(){
+'use strict';
+const base='https://gamonokka-art.github.io/learning-momentum/delivery/';
+const course=document.getElementById('course');
+const set=document.getElementById('set');
+const grid=document.getElementById('set-grid');
+const urlBox=document.getElementById('url');
+const preview=document.getElementById('preview');
+const status=document.getElementById('status');
+const pad=n=>String(n).padStart(2,'0');
+for(let n=1;n<=20;n++){
+ const option=document.createElement('option');option.value=pad(n);option.textContent='Set '+pad(n)+'（Q'+String((n-1)*5+1).padStart(3,'0')+'〜Q'+String(n*5).padStart(3,'0')+'）';set.appendChild(option);
+ const button=document.createElement('button');button.type='button';button.textContent='Set '+pad(n);button.dataset.set=pad(n);button.setAttribute('aria-pressed','false');button.addEventListener('click',()=>{set.value=pad(n);update();});grid.appendChild(button);
+}
+function currentUrl(){return base+course.value+'/set'+set.value+'.html'}
+function update(){
+ const url=currentUrl();urlBox.textContent=url;preview.href=url;status.textContent='';
+ grid.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.set===set.value)));
+}
+async function copy(text,success){
+ try{
+  if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(text);}
+  else{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand('copy');ta.remove();if(!ok)throw new Error('copy unsupported');}
+  status.textContent=success;
+ }catch(e){status.textContent='コピーできませんでした。表示されたURLを選択してコピーしてください。';}
+}
+document.getElementById('copy-url').addEventListener('click',()=>copy(currentUrl(),'URLをコピーしました。'));
+document.getElementById('copy-message').addEventListener('click',()=>{
+ const name=course.value==='standard'?'Standard':'Advanced';
+ const message='今日の英語学習はこちらです。\nBusiness English '+name+'｜Set '+set.value+'\n全5問・解答目安2分\n'+currentUrl()+'\n\n終了したら正解と日本語解説も確認してください。';
+ copy(message,'生徒向け案内文をコピーしました。');
+});
+course.addEventListener('change',update);set.addEventListener('change',update);update();
+})();
+</script>
+</body>
+</html>
