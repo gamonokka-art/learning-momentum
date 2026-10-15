@@ -107,12 +107,12 @@ function update(){
  const url=currentUrl();urlBox.textContent=url;preview.href=url;status.textContent='';
  grid.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.set===set.value)));
 }
-async function copy(text,success){
+async function copy(text,success,target=status){
  try{
   if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(text);}
   else{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand('copy');ta.remove();if(!ok)throw new Error('copy unsupported');}
-  status.textContent=success;
- }catch(e){status.textContent='コピーできませんでした。表示されたURLを選択してコピーしてください。';}
+  target.textContent=success;
+ }catch(e){target.textContent='コピーできませんでした。表示されたURLを選択してコピーしてください。';}
 }
 document.getElementById('copy-url').addEventListener('click',()=>copy(currentUrl(),'URLをコピーしました。'));
 document.getElementById('copy-message').addEventListener('click',()=>{
@@ -162,11 +162,11 @@ function updateAssessmentOptions(){
 }
 assessmentType.addEventListener('change',updateAssessmentOptions);
 assessmentSet.addEventListener('change',updateAssessment);
-document.getElementById('assessment-copy-url').addEventListener('click',()=>copy(assessmentBase+selectedAssessment().item.path,'テストURLをコピーしました。'));
+document.getElementById('assessment-copy-url').addEventListener('click',()=>copy(assessmentBase+selectedAssessment().item.path,'テストURLをコピーしました。',assessmentStatus));
 document.getElementById('assessment-copy-message').addEventListener('click',()=>{
  const {group,item}=selectedAssessment();
- const message='英語の確認テストのご案内です。\\n'+group.label+'｜'+item.label+'\\n全30問・解答目安'+group.duration+'\\n'+assessmentBase+item.path+'\\n\\n回答後に採点し、正解と日本語解説もご確認ください。';
- copy(message,'テストの案内文をコピーしました。');
+ const message='英語の確認テストのご案内です。\n'+group.label+'｜'+item.label+'\n全30問・解答目安'+group.duration+'\n'+assessmentBase+item.path+'\n\n回答後に採点し、正解と日本語解説もご確認ください。';
+ copy(message,'テストの案内文をコピーしました。',assessmentStatus);
 });
 updateAssessmentOptions();
 
