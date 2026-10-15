@@ -33,6 +33,7 @@ button:hover,.button-link:hover{background:#0d4d78}
 .warning{background:#fffaf0;border:1px solid #e7d5ae;border-radius:10px;padding:14px 16px;color:#5e4c2e;font-size:14px;line-height:1.7}
 footer{text-align:center;color:#607188;font-size:13px;padding:0 16px 28px}
 @media(max-width:550px){.card{padding:17px}.fields{grid-template-columns:1fr}.set-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.actions>*{flex:1 1 100%}header{padding:25px 18px}}
+.assessment-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}.assessment-info{color:#52667b;font-size:14px;line-height:1.7;margin:12px 0 0}.section-note{font-size:14px;color:#52667b;margin:-4px 0 16px}@media(max-width:550px){.assessment-fields{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -60,6 +61,27 @@ footer{text-align:center;color:#607188;font-size:13px;padding:0 16px 28px}
 <h2 id="quick-title">セットをすばやく選択</h2>
 <div id="set-grid" class="set-grid" aria-label="セット一覧"></div>
 <p class="note">各セット5問。選択後、上の「URLをコピー」または「案内文をコピー」を押してください。</p>
+</section>
+<section class="card" aria-labelledby="assessment-title">
+<h2 id="assessment-title">復習テスト・集中演習｜レベル確認にも</h2>
+<p class="section-note">TOEICレッスン未受講者や体験レッスンの事前確認にも使える総合問題です。テストを選んでURLや案内文をコピーできます。</p>
+<div class="assessment-fields">
+<div><label for="assessment-type">テストの種類</label><select id="assessment-type">
+<option value="standard-review">Standard 復習テスト（500〜700点）</option>
+<option value="advanced-review">Advanced 復習テスト（700〜900点）</option>
+<option value="standard-intensive">Standard Intensive Practice（500〜700点）</option>
+</select></div>
+<div><label for="assessment-set">テストを選択</label><select id="assessment-set"></select></div>
+</div>
+<p id="assessment-info" class="assessment-info"></p>
+<div class="url" id="assessment-url" aria-live="polite"></div>
+<div class="actions">
+<button id="assessment-copy-url" type="button">URLをコピー</button>
+<button id="assessment-copy-message" type="button" class="secondary">案内文をコピー</button>
+<a id="assessment-preview" class="button-link secondary" href="#" target="_blank" rel="noopener noreferrer">問題を確認 ↗</a>
+</div>
+<p id="assessment-status" class="status" role="status" aria-live="polite"></p>
+<p class="note">このテストは学習上の理解度を確認するためのものです。TOEICの公式スコアや総合的な英語力を30問だけで確定することはできません。</p>
 </section>
 <p class="note">目次付きの通常版を配信する場合は、<a href="./teacher-catalog.html">目次付き版の管理ページ</a>をご利用ください。</p>
 <div class="warning"><strong>運用上の注意：</strong>このページにはログイン認証はありません。URLを知っている人は閲覧できます。生徒名・成績などの個人情報は保存しません。個別配信版にもアクセス制限はありません。</div>
@@ -98,6 +120,56 @@ document.getElementById('copy-message').addEventListener('click',()=>{
  const message='今日の英語学習はこちらです。\nBusiness English '+name+'｜Set '+set.value+'\n全5問・解答目安2分\n'+currentUrl()+'\n\n終了したら正解と日本語解説も確認してください。';
  copy(message,'生徒向け案内文をコピーしました。');
 });
+
+const assessmentBase='https://gamonokka-art.github.io/learning-momentum/';
+const assessmentGroups={
+ 'standard-review':{label:'Standard 復習テスト',duration:'15分',items:[
+  {label:'Review 01',path:'standard/review/review01.html'},
+  {label:'Review 02',path:'standard/review/review02.html'}]},
+ 'advanced-review':{label:'Advanced 復習テスト',duration:'10分',items:[
+  {label:'Review 01',path:'advanced/review/review01.html'},
+  {label:'Review 02',path:'advanced/review/review02.html'},
+  {label:'Review 03',path:'advanced/review/review03.html'},
+  {label:'Review 04',path:'advanced/review/review04.html'},
+  {label:'Final Review',path:'advanced/review/final.html'}]},
+ 'standard-intensive':{label:'Standard Intensive Practice',duration:'15分',items:[
+  {label:'Set 01（基本〜標準）',path:'standard/intensive/set01.html'},
+  {label:'Set 02（標準〜やや難）',path:'standard/intensive/set02.html'}]}
+};
+const assessmentType=document.getElementById('assessment-type');
+const assessmentSet=document.getElementById('assessment-set');
+const assessmentUrl=document.getElementById('assessment-url');
+const assessmentInfo=document.getElementById('assessment-info');
+const assessmentPreview=document.getElementById('assessment-preview');
+const assessmentStatus=document.getElementById('assessment-status');
+function selectedAssessment(){
+ const group=assessmentGroups[assessmentType.value];
+ return {group,item:group.items[Number(assessmentSet.value)||0]};
+}
+function updateAssessment(){
+ const {group,item}=selectedAssessment();
+ const url=assessmentBase+item.path;
+ assessmentUrl.textContent=url;
+ assessmentPreview.href=url;
+ assessmentInfo.textContent=group.label+'｜'+item.label+'｜全30問・解答目安'+group.duration;
+ assessmentStatus.textContent='';
+}
+function updateAssessmentOptions(){
+ const group=assessmentGroups[assessmentType.value];
+ assessmentSet.replaceChildren();
+ group.items.forEach((item,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=item.label;assessmentSet.appendChild(o);});
+ updateAssessment();
+}
+assessmentType.addEventListener('change',updateAssessmentOptions);
+assessmentSet.addEventListener('change',updateAssessment);
+document.getElementById('assessment-copy-url').addEventListener('click',()=>copy(assessmentBase+selectedAssessment().item.path,'テストURLをコピーしました。'));
+document.getElementById('assessment-copy-message').addEventListener('click',()=>{
+ const {group,item}=selectedAssessment();
+ const message='英語の確認テストのご案内です。\\n'+group.label+'｜'+item.label+'\\n全30問・解答目安'+group.duration+'\\n'+assessmentBase+item.path+'\\n\\n回答後に採点し、正解と日本語解説もご確認ください。';
+ copy(message,'テストの案内文をコピーしました。');
+});
+updateAssessmentOptions();
+
 course.addEventListener('change',update);set.addEventListener('change',update);update();
 })();
 </script>
