@@ -84,6 +84,20 @@ footer{text-align:center;color:#607188;font-size:13px;padding:0 16px 28px}
 <p class="note">このテストは学習上の理解度を確認するためのものです。TOEICの公式スコアや総合的な英語力を30問だけで確定することはできません。</p>
 </section>
 <p class="note">目次付きの通常版を配信する場合は、<a href="./teacher-catalog.html">目次付き版の管理ページ</a>をご利用ください。</p>
+<section class="card" aria-labelledby="grammar-support-title">
+<h2 id="grammar-support-title">Grammar Support｜補足説明・確認テスト</h2>
+<p>英語の仕組みを一つずつ確かに。<br>基本の確認や、もう少し深く理解したいときに使える、Standard・Advanced共通の補助教材です。</p>
+<p><strong>Grammar Support 01｜分詞の使い分け</strong><br>分詞構文と名詞修飾の解説＋確認テスト20問（基本10問・応用10問）。自動採点・日本語解説付き。</p>
+<div class="url" id="grammar-support-url">https://gamonokka-art.github.io/learning-momentum/grammar-support/01-participles.html</div>
+<div class="actions">
+<a class="button-link" href="./grammar-support/">共通目次を開く</a>
+<a class="button-link secondary" href="./grammar-support/01-participles.html" target="_blank" rel="noopener noreferrer">Grammar Support 01を確認 ↗</a>
+<button id="grammar-copy-url" type="button" class="secondary">教材URLをコピー</button>
+<button id="grammar-copy-message" type="button" class="secondary">案内文をコピー</button>
+</div>
+<p id="grammar-status" class="status" role="status" aria-live="polite"></p>
+<p class="note">Standardの学習にも、Advancedの基礎確認にも使えます。確認テストは練習用です。</p>
+</section>
 <div class="warning"><strong>運用上の注意：</strong>このページにはログイン認証はありません。URLを知っている人は閲覧できます。生徒名・成績などの個人情報は保存しません。個別配信版にもアクセス制限はありません。</div>
 </main>
 <footer>Developed by EPC TOKYO</footer>
@@ -171,6 +185,14 @@ document.getElementById('assessment-copy-message').addEventListener('click',()=>
 updateAssessmentOptions();
 
 course.addEventListener('change',update);set.addEventListener('change',update);update();
+
+const grammarSupportUrl='https://gamonokka-art.github.io/learning-momentum/grammar-support/01-participles.html';
+const grammarStatus=document.getElementById('grammar-status');
+document.getElementById('grammar-copy-url').addEventListener('click',()=>copy(grammarSupportUrl,'教材URLをコピーしました。',grammarStatus));
+document.getElementById('grammar-copy-message').addEventListener('click',()=>{
+ const message='文法の補足学習のご案内です。\nGrammar Support 01｜分詞の使い分け\n解説＋確認テスト20問（基本10問・応用10問）\n'+grammarSupportUrl+'\n\n説明を確認したあと、確認テストに取り組んでみてください。採点後に正解と日本語解説も確認できます。';
+ copy(message,'教材の案内文をコピーしました。',grammarStatus);
+});
 })();
 </script>
 </body>
