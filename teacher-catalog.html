@@ -76,6 +76,20 @@ footer{text-align:center;color:#607188;font-size:13px;padding:0 16px 28px}
 <div id="set-grid" class="set-grid" aria-label="セット一覧"></div>
 <p class="note">各セット5問。選択後、上の「URLをコピー」または「案内文をコピー」を押してください。</p>
 </section>
+<section class="card" aria-labelledby="grammar-support-title">
+<h2 id="grammar-support-title">Grammar Support｜補足説明・確認テスト</h2>
+<p>英語の仕組みを一つずつ確かに。<br>基本の確認や、もう少し深く理解したいときに使える、Standard・Advanced共通の補助教材です。</p>
+<p><strong>Grammar Support 01｜分詞の使い分け</strong><br>分詞構文と名詞修飾の解説＋確認テスト20問（基本10問・応用10問）。自動採点・日本語解説付き。</p>
+<div class="url" id="grammar-support-url">https://gamonokka-art.github.io/learning-momentum/grammar-support/01-participles.html</div>
+<div class="actions">
+<a class="button-link" href="./grammar-support/">共通目次を開く</a>
+<a class="button-link secondary" href="./grammar-support/01-participles.html" target="_blank" rel="noopener noreferrer">Grammar Support 01を確認 ↗</a>
+<button id="grammar-copy-url" type="button" class="secondary">教材URLをコピー</button>
+<button id="grammar-copy-message" type="button" class="secondary">案内文をコピー</button>
+</div>
+<p id="grammar-status" class="status" role="status" aria-live="polite"></p>
+<p class="note">Standardの学習にも、Advancedの基礎確認にも使えます。確認テストは練習用です。</p>
+</section>
 <div class="warning"><strong>運用上の注意：</strong>このページにはログイン認証はありません。目次付き版の問題ページからは目次に戻ることができ、他のセットも閲覧できます。生徒名・成績などの個人情報は保存しません。</div>
 <p class="note">目次を見せずに1セットずつ配信する場合は、<a href="./teacher.html">個別配信版の管理ページ</a>をご利用ください。</p>
 </main>
@@ -130,6 +144,14 @@ document.getElementById('copy-message').addEventListener('click',()=>{
  copy(message,'生徒向け案内文をコピーしました。');
 });
 course.addEventListener('change',update);set.addEventListener('change',update);update();updateIndex();
+
+const grammarSupportUrl='https://gamonokka-art.github.io/learning-momentum/grammar-support/01-participles.html';
+const grammarStatus=document.getElementById('grammar-status');
+document.getElementById('grammar-copy-url').addEventListener('click',()=>copy(grammarSupportUrl,'教材URLをコピーしました。',grammarStatus));
+document.getElementById('grammar-copy-message').addEventListener('click',()=>{
+ const message='文法の補足学習のご案内です。\nGrammar Support 01｜分詞の使い分け\n解説＋確認テスト20問（基本10問・応用10問）\n'+grammarSupportUrl+'\n\n説明を確認したあと、確認テストに取り組んでみてください。採点後に正解と日本語解説も確認できます。';
+ copy(message,'教材の案内文をコピーしました。',grammarStatus);
+});
 })();
 </script>
 </body>
