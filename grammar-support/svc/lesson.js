@@ -25,9 +25,9 @@ pageCopy?.addEventListener('click',()=>{const u=new URL(location.href);u.hash=''
 const selector=document.querySelector('#material');
 if(selector){
  const data=JSON.parse(document.querySelector('#material-data').textContent);
- const base='https://gamonokka-art.github.io/learning-momentum/grammar-support/svc/';
+ const base='https://gamonokka-art.github.io/learning-momentum/delivery/grammar-support/svc/';
  const url=document.querySelector('#material-url'), message=document.querySelector('#material-message'), info=document.querySelector('#material-info'), preview=document.querySelector('#material-preview'), status=document.querySelector('#teacher-status');
- const update=()=>{const item=data[Number(selector.value)];const link=new URL(item.path,base).href;url.value=link;preview.href=item.path;info.textContent=item.info;message.value='今日の文法学習はこちらです。\nGrammar Support｜SVC\n'+item.label+'\n'+item.info+'\n'+link+'\n\n'+item.task;status.textContent='';document.querySelector('.copy-fallback')?.remove();};
+ const update=()=>{const item=data[Number(selector.value)];const link=new URL(item.path,base).href;url.value=link;preview.href='../../delivery/grammar-support/svc/'+item.path;info.textContent=item.info;message.value='今日の文法学習はこちらです。\nGrammar Support｜SVC\n'+item.label+'\n'+item.info+'\n'+link+'\n\n'+item.task;status.textContent='';document.querySelector('.copy-fallback')?.remove();};
  selector.addEventListener('change',update);
  document.querySelector('#copy-material-url').addEventListener('click',()=>copy(url.value,status));
  document.querySelector('#copy-material-message').addEventListener('click',()=>copy(message.value,status));
