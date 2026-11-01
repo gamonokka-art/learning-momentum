@@ -4,10 +4,6 @@ const answers=()=>[...document.querySelectorAll('details.answer')];
 const toggle=open=>answers().forEach(d=>{d.open=open;});
 document.querySelector('[data-show-all]')?.addEventListener('click',()=>toggle(true));
 document.querySelector('[data-hide-all]')?.addEventListener('click',()=>{toggle(false);document.querySelectorAll('details.hint').forEach(d=>{d.open=false;});});
-document.querySelector('[data-print]')?.addEventListener('click',()=>window.print());
-let beforePrint=[];
-addEventListener('beforeprint',()=>{beforePrint=[...document.querySelectorAll('details')].map(d=>[d,d.open]);toggle(true);});
-addEventListener('afterprint',()=>beforePrint.forEach(([d,o])=>{d.open=o;}));
 async function copy(text,status){
  try{
   if(navigator.clipboard&&isSecureContext){await navigator.clipboard.writeText(text);}
@@ -20,8 +16,6 @@ async function copy(text,status){
   const area=box.querySelector('textarea');area.value=text;area.focus();area.select();
  }
 }
-const pageCopy=document.querySelector('[data-copy-url]');
-pageCopy?.addEventListener('click',()=>{const u=new URL(location.href);u.hash='';u.search='';copy(u.href,document.querySelector('#copy-status'));});
 const selector=document.querySelector('#material');
 if(selector){
  const data=JSON.parse(document.querySelector('#material-data').textContent);
