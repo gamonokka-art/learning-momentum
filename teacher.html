@@ -63,10 +63,11 @@ footer{text-align:center;color:#607188;font-size:13px;padding:0 16px 28px}
 <p class="note">各セット5問。選択後、上の「URLをコピー」または「案内文をコピー」を押してください。</p>
 </section>
 <section class="card" aria-labelledby="assessment-title">
-<h2 id="assessment-title">復習テスト・集中演習｜レベル確認にも</h2>
-<p class="section-note">TOEICレッスン未受講者や体験レッスンの事前確認にも使える総合問題です。テストを選んでURLや案内文をコピーできます。</p>
+<h2 id="assessment-title">Checkpoint・復習テスト・集中演習</h2>
+<p class="section-note">CheckpointはStandard学習後の確認用です。復習テスト・集中演習はレベル確認にも使えます。テストを選んでURLや案内文をコピーできます。</p>
 <div class="assessment-fields">
 <div><label for="assessment-type">テストの種類</label><select id="assessment-type">
+<option value="standard-checkpoint">Standard Checkpoint Test（500〜700点）</option>
 <option value="standard-review">Standard 復習テスト（500〜700点）</option>
 <option value="advanced-review">Advanced 復習テスト（700〜900点）</option>
 <option value="standard-intensive">Standard Intensive Practice（500〜700点）</option>
@@ -138,6 +139,8 @@ document.getElementById('copy-message').addEventListener('click',()=>{
 
 const assessmentBase='https://gamonokka-art.github.io/learning-momentum/';
 const assessmentGroups={
+ 'standard-checkpoint':{label:'Standard Checkpoint Test',duration:'15分',pass:24,items:[
+  {label:'第1回（24問以上で合格）',path:'standard/checkpoint/test01.html'}]},
  'standard-review':{label:'Standard 復習テスト',duration:'15分',items:[
   {label:'Review 01',path:'standard/review/review01.html'},
   {label:'Review 02',path:'standard/review/review02.html'}]},
@@ -166,7 +169,7 @@ function updateAssessment(){
  const url=assessmentBase+item.path;
  assessmentUrl.textContent=url;
  assessmentPreview.href=url;
- assessmentInfo.textContent=group.label+'｜'+item.label+'｜全30問・解答目安'+group.duration;
+ assessmentInfo.textContent=group.label+'｜'+item.label+'｜全30問・'+(group.pass?'制限時間':'解答目安')+group.duration;
  assessmentStatus.textContent='';
 }
 function updateAssessmentOptions(){
@@ -180,7 +183,7 @@ assessmentSet.addEventListener('change',updateAssessment);
 document.getElementById('assessment-copy-url').addEventListener('click',()=>copy(assessmentBase+selectedAssessment().item.path,'テストURLをコピーしました。',assessmentStatus));
 document.getElementById('assessment-copy-message').addEventListener('click',()=>{
  const {group,item}=selectedAssessment();
- const message='英語の確認テストのご案内です。\n'+group.label+'｜'+item.label+'\n全30問・解答目安'+group.duration+'\n'+assessmentBase+item.path+'\n\n回答後に採点し、正解と日本語解説もご確認ください。';
+ const message=(group.pass?'Checkpoint Testのご案内です。\n':'英語の確認テストのご案内です。\n')+group.label+'｜'+item.label+'\n全30問・'+(group.pass?'制限時間':'解答目安')+group.duration+'\n'+assessmentBase+item.path+(group.pass?'\n\n辞書や教材を見ずに取り組んでください。24問以上で合格です。終了後、結果をお知らせください。':'\n\n回答後に採点し、正解と日本語解説もご確認ください。');
  copy(message,'テストの案内文をコピーしました。',assessmentStatus);
 });
 updateAssessmentOptions();
@@ -198,4 +201,5 @@ document.getElementById('grammar-copy-message').addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
 
