@@ -140,7 +140,8 @@ document.getElementById('copy-message').addEventListener('click',()=>{
 const assessmentBase='https://gamonokka-art.github.io/learning-momentum/';
 const assessmentGroups={
  'standard-checkpoint':{label:'Standard Checkpoint Test',duration:'15分',pass:24,items:[
-  {label:'第1回（24問以上で合格）',path:'standard/checkpoint/test01.html'}]},
+  {label:'第1回（24問以上で合格）',path:'standard/checkpoint/test01.html',duration:'15分',pass:24},
+  {label:'第2回（27問以上で合格）',path:'standard/checkpoint/test02.html',duration:'13分',pass:27}]},
  'standard-review':{label:'Standard 復習テスト',duration:'15分',items:[
   {label:'Review 01',path:'standard/review/review01.html'},
   {label:'Review 02',path:'standard/review/review02.html'}]},
@@ -162,7 +163,8 @@ const assessmentPreview=document.getElementById('assessment-preview');
 const assessmentStatus=document.getElementById('assessment-status');
 function selectedAssessment(){
  const group=assessmentGroups[assessmentType.value];
- return {group,item:group.items[Number(assessmentSet.value)||0]};
+ const item=group.items[Number(assessmentSet.value)||0];
+ return {group:{...group,duration:item.duration??group.duration,pass:item.pass??group.pass},item};
 }
 function updateAssessment(){
  const {group,item}=selectedAssessment();
@@ -183,7 +185,7 @@ assessmentSet.addEventListener('change',updateAssessment);
 document.getElementById('assessment-copy-url').addEventListener('click',()=>copy(assessmentBase+selectedAssessment().item.path,'テストURLをコピーしました。',assessmentStatus));
 document.getElementById('assessment-copy-message').addEventListener('click',()=>{
  const {group,item}=selectedAssessment();
- const message=(group.pass?'Checkpoint Testのご案内です。\n':'英語の確認テストのご案内です。\n')+group.label+'｜'+item.label+'\n全30問・'+(group.pass?'制限時間':'解答目安')+group.duration+'\n'+assessmentBase+item.path+(group.pass?'\n\n辞書や教材を見ずに取り組んでください。24問以上で合格です。終了後、結果をお知らせください。':'\n\n回答後に採点し、正解と日本語解説もご確認ください。');
+ const message=(group.pass?'Checkpoint Testのご案内です。\n':'英語の確認テストのご案内です。\n')+group.label+'｜'+item.label+'\n全30問・'+(group.pass?'制限時間':'解答目安')+group.duration+'\n'+assessmentBase+item.path+(group.pass?'\n\n辞書や教材を見ずに取り組んでください。'+group.pass+'問以上で合格です。終了後、結果をお知らせください。':'\n\n回答後に採点し、正解と日本語解説もご確認ください。');
  copy(message,'テストの案内文をコピーしました。',assessmentStatus);
 });
 updateAssessmentOptions();
@@ -201,5 +203,6 @@ document.getElementById('grammar-copy-message').addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
 
 
