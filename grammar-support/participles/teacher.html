@@ -1,0 +1,30 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>講師用｜分詞の使い分けの個別配信 | Grammar Support</title><meta name="description" content="選んだ教材だけを表示する、目次なしのURLを案内できます。"><link rel="stylesheet" href="../svc/style.css?v=pdf-1"></head><body><main><div class="crumbs"><a href="../index.html">Grammar Support</a> / <a href="../01-participles.html">分詞の使い分け</a></div><header><div class="brandline">LEARNING MOMENTUM · EPC TOKYO</div><p class="badge">Grammar Support 01 · 分詞の使い分け</p><h1>講師用｜分詞の使い分けの個別配信</h1><p>選んだ教材だけを表示する、目次なしのURLを案内できます。</p></header><nav class="page-nav" aria-label="教材の移動"><a href="../01-participles.html">分詞の使い分けの目次</a><a href="../../delivery/grammar-support/participles/explanation.html">基本解説</a><a href="../index.html">Grammar Support</a></nav><section class="lesson"><h2>受講者に送る教材を選ぶ</h2><p>個別配信する教材を選んで、URLまたは案内文をコピーしてください。受講者向けページには、目次や前後のセットへのリンクは表示されません。コピーした文章は、メールやLINEなどに貼り付けて送れます。</p><div class="teacher-fields"><label for="material">配信する教材</label><select id="material"><option value="0">解説</option><option value="1">Check 01</option><option value="2">Check 02</option></select><p id="material-info"></p><label for="material-url">教材URL</label><input class="copy-text" id="material-url" type="url" readonly><div class="actions"><button type="button" id="copy-material-url">URLをコピー</button><a href="../../delivery/grammar-support/participles/explanation.html" id="material-preview" target="_blank" rel="noopener">教材を確認 ↗</a></div><label for="material-message">受講者向け案内文</label><textarea id="material-message" rows="8" readonly></textarea><div class="actions"><button type="button" id="copy-material-message">案内文をコピー</button></div><p id="teacher-status" class="status" role="status" aria-live="polite"></p></div></section><script type="application/json" id="material-data">[{"path":"explanation.html","label":"解説","info":"分詞構文と名詞修飾の基本・比較・応用例","task":"説明と例文を確認し、分詞が何を説明しているかを意識して音読してください。"},{"path":"check01.html","label":"Check 01","info":"基本10問・自動採点・日本語解説付き","task":"10問すべてに解答して採点し、日本語解説を確認してください。最後に正しい英文を音読しましょう。"},{"path":"check02.html","label":"Check 02","info":"応用10問・自動採点・日本語解説付き","task":"10問すべてに解答して採点し、日本語解説を確認してください。最後に正しい英文を音読しましょう。"}]</script><div class="set-end"><nav class="page-nav" aria-label="教材の移動"><a href="../01-participles.html">分詞の使い分けの目次</a><a href="../../delivery/grammar-support/participles/explanation.html">基本解説</a><a href="../index.html">Grammar Support</a></nav></div><footer>Learning Momentum / EPC TOKYO · <a href="../index.html">Grammar Support</a></footer><script>(()=>{
+'use strict';
+const answers=()=>[...document.querySelectorAll('details.answer')];
+const toggle=open=>answers().forEach(d=>{d.open=open;});
+document.querySelector('[data-show-all]')?.addEventListener('click',()=>toggle(true));
+document.querySelector('[data-hide-all]')?.addEventListener('click',()=>{toggle(false);document.querySelectorAll('details.hint').forEach(d=>{d.open=false;});});
+async function copy(text,status){
+ try{
+  if(navigator.clipboard&&isSecureContext){await navigator.clipboard.writeText(text);}
+  else{const field=document.createElement('textarea');field.value=text;field.style.position='fixed';field.style.opacity='0';document.body.append(field);field.select();const ok=document.execCommand('copy');field.remove();if(!ok)throw Error('unavailable');}
+  status.textContent='コピーしました。';
+ }catch{
+  status.textContent='コピーできない場合は、下の欄を選択してコピーしてください。';
+  let box=document.querySelector('.copy-fallback');
+  if(!box){box=document.createElement('div');box.className='copy-fallback';const label=document.createElement('label');label.textContent='コピー用テキスト';const area=document.createElement('textarea');area.readOnly=true;label.append(area);box.append(label);status.after(box);}
+  const area=box.querySelector('textarea');area.value=text;area.focus();area.select();
+ }
+}
+const selector=document.querySelector('#material');
+if(selector){
+ const data=JSON.parse(document.querySelector('#material-data').textContent);
+ const base='https://gamonokka-art.github.io/learning-momentum/delivery/grammar-support/participles/';
+ const url=document.querySelector('#material-url'), message=document.querySelector('#material-message'), info=document.querySelector('#material-info'), preview=document.querySelector('#material-preview'), status=document.querySelector('#teacher-status');
+ const update=()=>{const item=data[Number(selector.value)];const link=new URL(item.path,base).href;url.value=link;preview.href='../../delivery/grammar-support/participles/'+item.path;info.textContent=item.info;message.value='今日の文法学習はこちらです。\nGrammar Support｜分詞の使い分け\n'+item.label+'\n'+item.info+'\n'+link+'\n\n'+item.task;status.textContent='';document.querySelector('.copy-fallback')?.remove();};
+ selector.addEventListener('change',update);
+ document.querySelector('#copy-material-url').addEventListener('click',()=>copy(url.value,status));
+ document.querySelector('#copy-material-message').addEventListener('click',()=>copy(message.value,status));
+ update();
+}
+})();</script></main></body></html>
